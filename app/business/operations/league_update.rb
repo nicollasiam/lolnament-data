@@ -23,6 +23,9 @@ module Operations
       # becouse a tournament will always be of that league
       # (unlike players)
       populate_tournaments(league_hash)
+
+      remove_all_teams
+      populate_teams(league_hash)
     end
 
     def all_leagues
@@ -38,13 +41,13 @@ module Operations
 
     def populate_teams(league_hash)
       league_hash['teams'].each do |team|
-        league.teams << @team_operation.get_and_update_team(team)
+        league.teams << @team_operation.get_and_update_team(team, @league)
       end
     end
 
     def populate_tournaments(league_hash)
-      league_hash['highlanderTournaments'].each do |tournaments|
-        @league.tournaments << @tournament_operation.get_and_update_tournament(tournaments, @league)
+      league_hash['highlanderTournaments'].each do |tournament|
+        @league.tournaments << @tournament_operation.get_and_update_tournament(tournament, @league)
       end
     end
   end

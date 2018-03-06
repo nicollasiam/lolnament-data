@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180305164848) do
+ActiveRecord::Schema.define(version: 20180306205741) do
+
+  create_table "league_teams", force: :cascade do |t|
+    t.integer "league_id"
+    t.integer "team_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["league_id"], name: "index_league_teams_on_league_id"
+    t.index ["team_id"], name: "index_league_teams_on_team_id"
+  end
 
   create_table "leagues", force: :cascade do |t|
     t.string "name"
@@ -20,6 +29,18 @@ ActiveRecord::Schema.define(version: 20180305164848) do
     t.string "original_id"
     t.string "region"
     t.string "logo_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.string "original_id"
+    t.string "slug"
+    t.string "name"
+    t.string "original_guid"
+    t.string "logo_url"
+    t.string "acronym"
+    t.string "bios"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
