@@ -5,9 +5,8 @@ module Operations
       @team = overrides.fetch(:team) { nil }
     end
 
-    def get_and_update_team(team_hash, league)
-      @team = find_or_create_by(slug: team_hash['slug'])
-      @team.league = league
+    def update_team(team_hash, league)
+      @team = Team.find_or_create_by(slug: team_hash['slug'])
 
       @team.update(original_id: team_hash['id'],
                    name: team_hash['name'],
@@ -17,8 +16,6 @@ module Operations
                    bios: team_hash['bios'])
 
       LeagueTeam.find_or_create_by(league: league, team: @team)
-
-      @team
     end
   end
 end

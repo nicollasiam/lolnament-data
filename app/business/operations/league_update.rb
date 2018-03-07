@@ -19,13 +19,14 @@ module Operations
                     logo_url: league_hash['leagues'].first['logoUrl']
                     )
 
+      remove_all_teams
+      populate_teams(league_hash)
+
       # The is no need to remove all tournaments before
       # becouse a tournament will always be of that league
       # (unlike players)
       populate_tournaments(league_hash)
 
-      remove_all_teams
-      populate_teams(league_hash)
     end
 
     def all_leagues
@@ -41,7 +42,7 @@ module Operations
 
     def populate_teams(league_hash)
       league_hash['teams'].each do |team|
-        league.teams << @team_operation.get_and_update_team(team, @league)
+        @team_operation.update_team(team, @league)
       end
     end
 

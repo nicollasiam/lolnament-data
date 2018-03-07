@@ -7,6 +7,8 @@ module Applications
     end
 
     def execute
+      start_time = Time.now
+
       @league_operarion.all_leagues.each do |league|
         begin
           response = JSON.parse(@rito_api.get_league(league))
@@ -16,6 +18,11 @@ module Applications
           Rails.logger.error("Erro ao atualizar Liga #{league}: #{error}")
         end
       end
+
+      end_time = Time.now
+      minutes = (end_time - start_time) / 60
+      seconds = (end_time - start_time) % 60
+      Rails.logger.info("Time elapsed #{minutes.to_i}:#{seconds.round(2)}")
     end
   end
 end
