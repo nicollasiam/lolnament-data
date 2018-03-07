@@ -11,12 +11,17 @@ module Operations
 
       @tournament.update(original_guid: tournament_hash['id'],
                          title: tournament_hash['title'],
-                         description: tournament_hash['description']
+                         description: tournament_hash['description'],
+                         start_date: tournament_hash['startDate'],
+                         end_date: tournament_hash['endDate']
                         )
 
-      # Remove all teams
+      # Remove all teams and repopulate
       remove_all_teams
       populate_rosters(tournament_hash)
+
+      # Create the tournament standings
+      populate_standings(tournament_hash)
 
       @tournament
     end
@@ -32,6 +37,27 @@ module Operations
         # It is odd but team_value['team'] is the team's id
         team = Team.find_by(original_id: team_value['team'])
         Roster.create(tournament: @tournament, team: team)
+      end
+    end
+
+    def populate_standings(tournament_hash)
+      return nil unless tournament_hash['standings']
+      position = 0
+
+      tournament_hash['standings']['result'].each do |stand|
+        stand.each do |roster_hash|
+          position += 1
+
+          team_original_id = tournament_hash['rosters'].find { |k, v| k == roster_hash['roster'] }[1]['team']
+          team = Team.find_by(original_id: team_original_id)
+          new_stand = Standing.create(tournament: @tournament,
+                                       team: team,
+                                       position: position
+                                      )
+
+          @tournament.standings << new_stand
+          team.standings << new_stand
+        end
       end
     end
   end
