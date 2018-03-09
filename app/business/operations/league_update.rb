@@ -37,7 +37,7 @@ module Operations
 
     def update_teams(league_hash)
       league_hash['teams'].each do |team|
-        @team_operation.update_team(team, @league)
+        @league.teams << @team_operation.get_and_update_team(team, @league)
       end
     end
 
